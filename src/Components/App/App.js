@@ -20,9 +20,16 @@ class App extends React.Component {
         album: "2",
         id: 3
       }
-    ]
+      ],
+      playListName: "Test",
+      playListTracks: [{
+        name: "Something Comforting",
+        artist: "Porter Robinson",
+        album: "New",
+        id: 111
+      }],
     };
-  }
+  };
 
 
   render() {
@@ -33,7 +40,7 @@ class App extends React.Component {
         <div className="App">
           <div className="App-playlist">
           <SearchResults searchResults={this.state.searchResults}/>
-          {/* <Playlist /> */}
+          <Playlist playListTracks={this.state.playListTracks}/>
           </div>
         </div>
       </div>
