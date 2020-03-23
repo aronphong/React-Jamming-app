@@ -12,13 +12,13 @@ class App extends React.Component {
         name: "Aron",
         artist: "Phong",
         album: "1",
-        id: 2
+        id: "1"
       }, 
       {
         name: "Aron",
         artist: "Phong",
         album: "2",
-        id: 3
+        id: "3"
       }
       ],
       playListName: "Test",
@@ -26,23 +26,31 @@ class App extends React.Component {
         name: "Something Comforting",
         artist: "Porter Robinson",
         album: "New",
-        id: 111
+        id: "111"
       }],
     };
 
     this.addTrack = this.addTrack.bind(this);
+    this.removeTrack = this.removeTrack.bind(this);
   };
 
   addTrack(track) {
-    if (this.state.playlistTracks.find(savedTrack => savedTrack.id === track.id)) {
+    let currentTracks = [...this.state.playListTracks];
+    if (currentTracks.find(savedTrack => savedTrack.id === track.id)) {
       return;
     }
-    
-    let currentTracks = this.state.playListTracks;
-    currentTracks.push(track);
-    console.log(currentTracks);
 
-    this.setState({playListTracks: currentTracks})
+    currentTracks.push(track);
+    this.setState({playListTracks: currentTracks});
+  }
+
+  removeTrack(track) {
+    let currentTracks = [...this.state.playListTracks];
+    if (currentTracks.find(savedTrack => savedTrack.id === track.id)) {
+      let index = currentTracks.indexOf(track);
+      currentTracks.splice(index, 1);
+      this.setState({playListTracks: currentTracks});
+    }
   }
 
   render() {
@@ -54,8 +62,10 @@ class App extends React.Component {
           <div className="App-playlist">
           <SearchResults 
             searchResults={this.state.searchResults}
-            onAdd={this.state.addTrack}/>
-          <Playlist playListTracks={this.state.playListTracks}/>
+            onAdd={this.addTrack}/>
+          <Playlist 
+            onRemove={this.removeTrack}
+            playListTracks={this.state.playListTracks}/>
           </div>
         </div>
       </div>
