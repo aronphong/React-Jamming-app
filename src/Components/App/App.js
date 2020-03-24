@@ -23,12 +23,7 @@ class App extends React.Component {
       }
       ],
       playListName: "New Playlist",
-      playListTracks: [{
-        name: "Something Comforting",
-        artist: "Porter Robinson",
-        album: "New",
-        id: "111"
-      }],
+      playListTracks: [],
     };
 
     this.addTrack = this.addTrack.bind(this);
@@ -66,6 +61,8 @@ class App extends React.Component {
     const uri = currentTracks.map(track => {
       return track.uri;
     })
+
+    Spotify.savePlaylist(this.state.playListName, uri);
   }
 
   search(term) {

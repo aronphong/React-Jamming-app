@@ -1,7 +1,6 @@
 const clientID = "7886e54bd9cc4385a7b364d3fe91c805";
 const redirectURI = "http://localhost:3000/";
 let token;
-const authEndpoint = 'https://accounts.spotify.com/authorize';
 
 const Spotify = {
     getAccessToken() {
@@ -43,6 +42,37 @@ const Spotify = {
                 album: track.album.name,
                 uri: track.uri
             }));
+        });
+    },
+
+    savePlaylist(name, arrTrackURI) {
+        if (!name || arrTrackURI.length === 0) {
+            return
+        }
+
+        const accessToken = Spotify.getAccessToken();
+        const headers =  { Authorization: `Bearer ${accessToken}` }
+        let userID = "";
+
+        return fetch("https://api.spotify.com/v1/me", {
+            headers: headers
+        }).then(response => {
+            return response.json();
+        }).then(jsonResponse => {
+            userID = jsonResponse.id;
+            return fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
+                headers: headers,
+                method: 'POST',
+                body: JSON.stringify({name: name})
+            }).then(response => response.json()
+            ).then(jsonResponse => {
+                const playListID = jsonResponse.id;
+                return fetch(`https://api.spotify.com/v1/playlists/${playListID}/tracks`, {
+                    headers: headers,
+                    method: 'POST',
+                    body: JSON.stringify({uris: arrTrackURI})
+                })
+            })
         });
     },
 }
