@@ -5,7 +5,6 @@ import { Track } from '../Track/Track';
 export class TrackList extends React.Component {
 
     render() {
-        // console.log(this.props.tracks)
         return (
             <div className="TrackList">
                 {this.props.tracks.map(track => {
@@ -18,7 +17,7 @@ export class TrackList extends React.Component {
                         name={track.name}
                         artist={track.artist}
                         album={track.album}/>
-                    )
+                    );
                 })
                 }
             </div>
