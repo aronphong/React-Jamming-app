@@ -54,27 +54,35 @@ const Spotify = {
         const headers =  { Authorization: `Bearer ${accessToken}` }
         let userID = "";
 
-        return fetch("https://api.spotify.com/v1/me", {
-            headers: headers
-        }).then(response => {
-            return response.json();
-        }).then(jsonResponse => {
-            userID = jsonResponse.id;
-            return fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
+        const save = async () => {
+
+            // Get current user's ID
+            const response = await fetch("https://api.spotify.com/v1/me", {
                 headers: headers,
-                method: 'POST',
+                mode: 'cors'
+            });
+            const jsonData = await response.json();
+            userID = await jsonData.id;
+
+            // POST new playlist with input name to current Spotify account
+            const postPlaylist = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
+                headers: headers,
+                method: "POST",
                 body: JSON.stringify({name: name})
-            }).then(response => response.json()
-            ).then(jsonResponse => {
-                const playListID = jsonResponse.id;
-                return fetch(`https://api.spotify.com/v1/playlists/${playListID}/tracks`, {
-                    headers: headers,
-                    method: 'POST',
-                    body: JSON.stringify({uris: arrTrackURI})
-                })
-            })
-        });
-    },
+            });
+            const jsonPost = await postPlaylist.json();
+            const playListID = await jsonPost.id;
+
+            // POST track URIs to new playlist
+            return await fetch(`https://api.spotify.com/v1/playlists/${playListID}/tracks`, {
+                headers: headers,
+                method: "POST",
+                body: JSON.stringify({uris: arrTrackURI})
+            });
+        };
+
+        save();
+    }
 }
 
 export default Spotify;
