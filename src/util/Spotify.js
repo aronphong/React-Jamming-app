@@ -33,17 +33,17 @@ const Spotify = {
                 });
                 const jsonResponse = await response.json();
     
-                if (!jsonResponse.tracks) {
+                if (await jsonResponse.tracks) {
+                    return jsonResponse.tracks.items.map(track => ({
+                        id: track.id,
+                        name: track.name,
+                        artist: track.artists[0].name,
+                        album: track.album.name,
+                        uri: track.uri
+                    }));
+                } else {
                     return [];
                 };
-
-                return await jsonResponse.tracks.items.map(track => ({
-                    id: track.id,
-                    name: track.name,
-                    artist: track.artists[0].name,
-                    album: track.album.name,
-                    uri: track.uri
-                }));
             } catch (error) {
                 console.log(error);
             };
